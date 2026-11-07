@@ -1,0 +1,6 @@
+/* ===== panels.css — 事件信息区、时钟、推演结果 ===== */
+#sim div { padding:4px 0;border-bottom:1px dashed #2b3a6e }
+.w { color:var(--warn) }
+#clk { font:600 22px/1.4 ui-monospace,Menlo,Consolas,monospace;color:var(--acc) }
+#info img,#info video { display:block }
+#info a { color:var(--acc) }

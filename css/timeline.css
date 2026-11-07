@@ -1,0 +1,8 @@
+/* ===== timeline.css — 时间轴刻度与事件按钮 ===== */
+#track { position:relative;height:14px;margin-top:4px }
+.tk { position:absolute;top:0;width:3px;height:14px;border-radius:2px;background:var(--acc);opacity:.7 }
+.tk.plan { background:var(--warn) }
+.chip { font-size:12px;padding:3px 8px }
+.plan-c { border-color:var(--warn) }
+.tk.crs { background:#6f6 }
+.chip.crs { border-color:#6f6 }

@@ -1,0 +1,15 @@
+/* ===== base.css — 颜色变量、重置、通用组件(卡片/按钮/输入框) ===== */
+:root { color-scheme:dark;--bg:#070b18;--card:#111a33;--fg:#e8ecf8;--mut:#8b97b8;--acc:#5bc0ff;--warn:#ffb454;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px) }
+* { box-sizing:border-box }
+body { margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 system-ui,"PingFang SC","Microsoft YaHei",sans-serif }
+main { max-width:860px;margin:0 auto;padding:12px }
+h1 { font-size:20px;margin:4px 0 8px }
+canvas { width:100%;border-radius:12px;background:#03050d;display:block }
+.card { background:var(--card);border-radius:12px;padding:12px;margin-top:10px }
+.big { font-size:22px;color:var(--acc);font-weight:600 }
+.mut { color:var(--mut);font-size:13px }
+input[type=range] { width:100% }
+button,select,input,textarea { background:#1b2750;color:var(--fg);border:1px solid #2b3a6e;border-radius:8px;padding:6px 10px;font:inherit }
+button { cursor:pointer }
+button:hover { background:#25357a }
+.row { display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:6px }

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--
+  时空漫游 — 结构说明(详见 README.md)
+  css/   样式,按功能分文件        js/    交互逻辑,按功能分文件(普通脚本,按下方顺序加载)
+  data/  事件、课程、课程事件数据  media/ 图片、课件幻灯片(img/slides 引用)
+-->
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>时空漫游</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/timeline.css">
+<link rel="stylesheet" href="css/panels.css">
+<link rel="stylesheet" href="css/course.css">
+<link rel="stylesheet" href="css/tour.css">
+</head><body>
+<main>
+<!-- 演示提示条 + 导览/反馈入口 -->
+<div class="card" style="margin:0 0 10px;border:1px solid #2b3a6e">🎮 <b>演示版</b> · 欢迎试玩并提意见 <button onclick="tour(0)">▶ 开始导览</button> <button onclick="openFb()">💡 需求反馈</button><div class="mut">所有数据只保存在你自己的浏览器里。</div></div>
+<!-- 页面标题 -->
+<h1>🌌 时空漫游 <span class="mut">过去亿年 ↔ 未来万年 · 太阳系</span></h1>
+<!-- ① 事件信息区:标题、说明、图片/视频/课件(js/info.js) -->
+<div id="info" class="card"></div>
+<!-- ② 3D 天体:地球/月球/火星(js/globe.js) -->
+<div id="g3" class="card" style="padding:0;height:340px;position:relative;overflow:hidden;touch-action:none;cursor:grab"><div id="gl" style="position:absolute;left:10px;top:8px;font-size:13px;color:var(--mut);z-index:2;pointer-events:none"></div></div>
+<!-- ③ 太阳系 2D(js/solar.js) -->
+<canvas id="cv" width="720" height="400"></canvas>
+<!-- ④ 时间显示 年月日 时分秒(js/clock.js) -->
+<div class="card" style="text-align:center"><div id="clk"></div><div id="clkt" class="mut"></div></div>
+<!-- ⑤ 时间轴:滑块、事件按钮、电影模式(js/timeline.js) -->
+<div class="card">
+ <div class="big" id="when"></div><div id="where" class="mut"></div>
+ <div id="what" style="margin-top:6px"></div>
+ <input type="range" id="sl" min="-1000" max="1000" value="0" style="margin-top:10px">
+ <div id="track"></div>
+ <div class="mut">时间轴为对数刻度:左侧至 2.5 亿年前,右侧至 1 万年后,中间为现在</div>
+ <div class="row"><button id="prev">⏮ 上一个</button><button id="play">▶ 电影模式</button><button id="next">下一个 ⏭</button>
+ <button id="now">回到现在</button><button id="cc">📚 课程中心</button></div>
+ <div class="row" id="chips"></div>
+</div>
+<!-- ⑥ 添加计划与推演(js/plans.js) -->
+<div class="card"><b>📝 添加计划</b>(课程 / 旅行)
+ <div class="row"><input id="pd" type="date"><select id="pp"><option value="earth">地球</option><option value="moon">月球</option><option value="mars">火星</option><option value="venus">金星</option><option value="jupiter">木星</option></select>
+ <select id="pt"><option>旅行</option><option>课程</option></select></div>
+ <div class="row"><select id="pc"><option value="35.68,139.69">东京</option><option value="35.01,135.77">京都</option><option value="39.9,116.4">北京</option><option value="48.86,2.35">巴黎</option><option value="40.71,-74">纽约</option><option value="-33.87,151.2">悉尼</option><option value="0.67,23.47">月球·静海</option><option value="18.4,77.5">火星·杰泽罗</option></select><span class="mut">地点(决定 3D 标记位置)</span></div>
+ <div class="row"><input id="px" placeholder="计划内容,如:去京都看红叶" style="flex:1;min-width:200px"><button id="add">添加</button></div>
+ <div class="row"><select id="ps"></select><button id="simbtn">🔮 推演所选计划</button></div>
+ <div id="sim" style="margin-top:8px"></div>
+</div>
+</main>
+<!-- 3D 库(需联网;离线测试时 3D 区域不显示,其余功能正常) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- 业务脚本:顺序重要(后面的依赖前面的全局变量) -->
+<script src="js/config.js"></script>
+<script src="data/events.js"></script>
+<script src="data/courses.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/plans.js"></script>
+<script src="js/solar.js"></script>
+<script src="js/globe.js"></script>
+<script src="js/clock.js"></script>
+<script src="data/lessons.js"></script>
+<script src="js/course.js"></script>
+<script src="js/feedback.js"></script>
+<script src="js/tour.js"></script>
+<script src="js/info.js"></script>
+<script src="js/main.js"></script>
+</body></html>
