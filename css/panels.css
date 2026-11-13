@@ -4,3 +4,9 @@
 #clk { font:600 22px/1.4 ui-monospace,Menlo,Consolas,monospace;color:var(--acc) }
 #info img,#info video { display:block }
 #info a { color:var(--acc) }
+
+/* ---- 地球双击弹窗(map.js)---- */
+.map-pop { position:absolute; left:8px; right:8px; bottom:8px; z-index:3; background:#111a33ee; border:1px solid var(--acc); border-radius:12px; padding:8px 10px; font-size:13px; }
+.map-pop .row { margin-top:6px; }
+.mapbtn { padding:6px 12px; border-radius:10px; border:1px solid #2b3a6e; background:#1b2750; color:#e8ecf8; cursor:pointer; font:inherit; }
+.mapbtn.on { background:var(--acc); color:#04101f; font-weight:700; border-color:var(--acc); }

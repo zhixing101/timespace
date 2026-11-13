@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--
+  时空漫游 · 星际赛车
+  race/data.js     车型与 9 个地点的环境数据     race/js/engine.js  赛车引擎
+  race/js/ui.js    选择界面与控制              race/css/race.css  样式
+-->
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>星际赛车 · 时空漫游</title>
+<link rel="stylesheet" href="css/race.css"></head><body>
+
+<!-- ① 选择赛车和地点 -->
+<div id="setup">
+  <p><a href="../index.html">← 返回时空漫游</a></p>
+  <h1>🏎 星际赛车</h1>
+  <h2>1. 选择赛车</h2><div class="grid" id="cars"></div>
+  <h2>2. 选择地点(太阳系行星)</h2><div class="grid" id="planets"></div>
+  <div id="info"></div>
+  <div class="row"><button class="go" id="start">🏁 开始比赛</button><span style="color:#93a0c2">方向键 / WASD 控制;手机用屏幕按钮。3 圈,和 3 辆电脑车比赛。</span></div>
+</div>
+
+<!-- ② 比赛画面 -->
+<div id="game" hidden>
+  <canvas id="cv"></canvas>
+  <div id="hud"></div><div id="env"></div><div id="count"></div>
+  <div id="touch"><button data-k="left">◀</button><button data-k="right">▶</button><button data-k="brake">■</button><button data-k="gas">▲</button></div>
+  <div id="end" hidden><h1>比赛结束</h1><ol id="endlist"></ol>
+    <div class="row"><button class="go" id="again">再来一局</button><button id="back2">换车 / 换地点</button><a href="../index.html">返回时空漫游</a></div></div>
+  <button id="back" style="position:absolute;right:10px;top:calc(10px + env(safe-area-inset-top,0px))">退出</button>
+</div>
+
+<script src="data.js"></script><script src="js/engine.js"></script><script src="js/ui.js"></script>
+</body></html>

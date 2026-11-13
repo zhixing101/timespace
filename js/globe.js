@@ -24,9 +24,21 @@ function setGlobe(e){const b=e.p;if(b!==gb){gb=b;gm.map=TX[b]||(TX[b]=mkTex(b));
  const la=e.la||0,lo=e.lo||0,th=(90-la)*Math.PI/180,ph=(lo+180)*Math.PI/180,v=new THREE.Vector3(-Math.cos(ph)*Math.sin(th),Math.cos(th),Math.sin(ph)*Math.sin(th));
  mk.position.copy(v).multiplyScalar(1.01);ring.position.copy(v).multiplyScalar(1.012);ring.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),v);
  tx=la*Math.PI/180;ty=Math.atan2(-v.x,v.z);oX=0;oY=0;
- $('gl').textContent=(GN[b]||'🪐 '+(PN[b]||b))+' · '+e.l+' ('+la.toFixed(1)+', '+lo.toFixed(1)+')'+(b==='earth'&&e.y<-1e6?' · 古大陆已漂移,此处为今日对应坐标':'')+' · 可拖动旋转'}
+ $('gl').textContent=(GN[b]||'🪐 '+(PN[b]||b))+' · '+e.l+' ('+la.toFixed(1)+', '+lo.toFixed(1)+')'+(b==='earth'&&e.y<-1e6?' · 古大陆已漂移,此处为今日对应坐标':'')+' · 可拖动旋转 · 双击打开地图'}
 let dr=null;RN.domElement.onpointerdown=ev=>{dr=[ev.clientX,ev.clientY];gd.style.cursor='grabbing'};addEventListener('pointerup',()=>{dr=null;gd.style.cursor='grab'});
 RN.domElement.onpointermove=ev=>{if(!dr)return;oY+=(ev.clientX-dr[0])*.008;oX+=(ev.clientY-dr[1])*.008;dr=[ev.clientX,ev.clientY]};
+// 双击球面:取点 → 经纬度 → 地图弹窗(见 map.js);同时把红点移到被点的位置
+const ray=new THREE.Raycaster(), m2=new THREE.Vector2();
+RN.domElement.ondblclick=ev=>{
+  const r=RN.domElement.getBoundingClientRect();
+  m2.set(((ev.clientX-r.left)/r.width)*2-1, -((ev.clientY-r.top)/r.height)*2+1);
+  ray.setFromCamera(m2,cam);
+  const hit=ray.intersectObject(grp.children[0])[0]; if(!hit) return;
+  const p=grp.worldToLocal(hit.point.clone()), v=p.clone().normalize();
+  mk.position.copy(v).multiplyScalar(1.01); ring.position.copy(v).multiplyScalar(1.012);
+  ring.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),v);
+  const ll=pickToLatLon(p.x,p.y,p.z); showMapPopup(ll[0],ll[1],gb);
+};
 const nm=d=>((d+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
 function rl(t){grp.rotation.x+=(tx+oX-grp.rotation.x)*.08;grp.rotation.y+=nm(ty+oY-grp.rotation.y)*.08;ring.scale.setScalar(1+.35*Math.sin(t*.006));RN.render(sc,cam);requestAnimationFrame(rl)}
 $('pp').onchange=()=>{const m={moon:6,mars:7};if(m[$('pp').value]!=null)$('pc').selectedIndex=m[$('pp').value]};
