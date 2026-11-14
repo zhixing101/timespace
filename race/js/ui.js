@@ -24,7 +24,18 @@
     b.onclick = () => { planet = k; mark(); };
     $('planets').append(b);
   });
+  // 赛道(难度):名字、星级、障碍与单词数量
+  let track = 'easy';
+  try { track = localStorage.getItem('race-track') || track; } catch (e) {}
+  if (!TRACKS[track]) track = 'easy';
+  Object.keys(TRACKS).forEach(k => {
+    const t = TRACKS[k], b = document.createElement('div'); b.className = 'opt'; b.dataset.id = k;
+    b.innerHTML = '<b>' + t.name + ' · ' + '★'.repeat(t.stars) + '☆'.repeat(3 - t.stars) + ' ' + t.level + '</b><small>' + t.desc + '</small><br><small>障碍 ' + t.obst + ' · 单词牌 ' + t.words + '</small>';
+    b.onclick = () => { track = k; try { localStorage.setItem('race-track', k); } catch (e) {} mark(); };
+    $('tracks').append(b);
+  });
   function mark() {
+    document.querySelectorAll('#tracks .opt').forEach(e => e.classList.toggle('on', e.dataset.id === track));
     document.querySelectorAll('#cars .opt').forEach(e => e.classList.toggle('on', e.dataset.id === car));
     document.querySelectorAll('#planets .opt').forEach(e => e.classList.toggle('on', e.dataset.id === planet));
     const p = PLANETS[planet];
@@ -53,7 +64,7 @@
   mark();
 
   // 开始 / 返回
-  function begin() { $('setup').hidden = true; $('game').hidden = false; delete $('mtest').dataset.on; $('mtest').textContent = '▶ 试听'; Music.play(music); Race.start(car, planet); }
+  function begin() { $('setup').hidden = true; $('game').hidden = false; delete $('mtest').dataset.on; $('mtest').textContent = '▶ 试听'; Music.play(music); Race.start(car, planet, track, { speak: $('speak').checked }); }
   $('start').onclick = begin;
   $('again').onclick = begin;
   $('back').onclick = $('back2').onclick = () => { Race.stop(); Music.stop(); $('game').hidden = true; $('setup').hidden = false; };

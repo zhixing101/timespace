@@ -33,3 +33,8 @@ h1 { font-size:22px; margin:6px 0; } h2 { font-size:17px; margin:18px 0 8px; col
 #touch { position:absolute; right:10px; bottom:calc(10px + env(safe-area-inset-bottom,0px)); display:flex; gap:10px; }
 #touch button { width:64px; height:64px; font-size:24px; border-radius:50%; opacity:.8; }
 @media (hover:hover) and (pointer:fine) { #touch { display:none; } }  /* 电脑上隐藏触屏按钮 */
+
+/* ③ 单词提示、结算 */
+#toast { position:absolute; left:50%; transform:translateX(-50%); bottom:calc(70px + env(safe-area-inset-bottom,0px)); background:#000b; padding:8px 18px; border-radius:12px; font-size:18px; opacity:0; transition:opacity .2s; pointer-events:none; max-width:92%; text-align:center; }
+#endscore { margin-top:6px; font-size:17px; } #endwords { max-width:640px; color:#cfe3ff; font-size:14px; line-height:1.8; }
+label { cursor:pointer; }
