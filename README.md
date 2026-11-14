@@ -34,7 +34,7 @@ timespace-site/
 │  ├─ courses.js         站内 4 门小课
 │  └─ lessons.js         蒋老师编程课各周(带课件与图片)
 ├─ race/                 星际赛车:index.html、data.js(车型+9个地点环境)、js/engine.js、js/ui.js、css/race.css
-├─ media/                deck/ poem/ struct/ 课件幻灯片图片,news/ 新闻示意图,*.pptx 原文件
+├─ media/                deck/ poem/ struct/ first/ 课件幻灯片图片,news/ 新闻示意图,*.pptx 原文件
 └─ tools/build-single.py 生成单文件版本
 ```
 

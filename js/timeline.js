@@ -14,18 +14,22 @@ function fy(y){const d=y-NOW;if(d<-1e8)return(-d/1e8).toFixed(1)+' 亿年前';if
 const PN={earth:'地球',moon:'月球',mars:'火星',venus:'金星',jupiter:'木星',mercury:'水星',saturn:'土星'};
 let cur=null;
 function show(){const u=sl.value/1000,y=u2y(u);let best=null,bd=9;
- all().forEach(e=>{const dd=Math.abs(y2u(e.y)-u);if(dd<bd){bd=dd;best=e}});cur=best;
+ all().forEach(e=>{const dd=Math.abs(y2u(e.y)-u);if(dd<bd){bd=dd;best=e}});
+ // 滑块分辨率有限(对数轴上过去几年内的事件挤在同一格),所以优先用“刚跳转到的那个事件”
+ if(TARGET&&TARGET.t&&Math.abs(y2u(TARGET.y)-u)<.004){best=TARGET;bd=Math.abs(y2u(TARGET.y)-u)}
+ cur=best;
  $('when').textContent=fy(y)+(best&&bd<.004?'':'(附近最近事件如下)');clk(y,best,bd);
  if(best){$('where').textContent='📍 '+PN[best.p]+' · '+best.l+'  |  '+fy(best.y);
  $('what').innerHTML='';const b=document.createElement('b');b.textContent=best.t+(best.plan?'(我的计划)':'');
  $('what').append(b,document.createElement('br'),best.d);setGlobe(best);renderInfo(best);if(best.course){const lk=document.createElement('button');lk.textContent='进入课程 →';lk.onclick=()=>openCourse(best.course);$('what').append(document.createElement('br'),lk)}}}
-sl.oninput=()=>{stop();show()};
+sl.oninput=()=>{TARGET=null;stop();show()};
 function renderTicks(){$('track').innerHTML='';$('chips').innerHTML='';const a=all();
  a.forEach(e=>{const t=document.createElement('div');t.className='tk'+(e.plan?' plan':'')+(e.course?' crs':'');t.style.left=((y2u(e.y)+1)/2*100)+'%';$('track').append(t);
  const c=document.createElement('button');c.className='chip'+(e.plan?' plan-c':'')+(e.course?' crs':'');c.textContent=e.t;c.onclick=()=>{stop();go(e)};$('chips').append(c)});
  $('ps').innerHTML='';plans.forEach((p,i)=>{const o=document.createElement('option');o.value=i;o.textContent=p.date+' '+PN[p.p]+' '+p.t;$('ps').append(o)})}
 let tw=null;
-function go(e,cb){LIVE=false;clearInterval(tw);const from=+sl.value,to=Math.round(y2u(e.y)*1000),s=performance.now(),dur=1400;
+let TARGET=null;   // 最近一次 go() 跳转的目标事件(手动拖动滑块时清空)
+function go(e,cb){TARGET=e;LIVE=false;clearInterval(tw);const from=+sl.value,to=Math.round(y2u(e.y)*1000),s=performance.now(),dur=1400;
  tw=setInterval(()=>{const k=Math.min(1,(performance.now()-s)/dur),q=k*k*(3-2*k);sl.value=from+(to-from)*q;show();if(k>=1){clearInterval(tw);cb&&cb()}},30)}
 let auto=false,at=null;
 function stop(){auto=false;clearTimeout(at);$('play').textContent='▶ 电影模式'}
