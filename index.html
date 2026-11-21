@@ -7,6 +7,7 @@
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>时空漫游</title>
+<script src="js/theme.js"></script>
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/timeline.css">
 <link rel="stylesheet" href="css/panels.css">
@@ -15,15 +16,18 @@
 </head><body>
 <main>
 <!-- 演示提示条 + 导览/反馈入口 -->
-<div class="card" style="margin:0 0 10px;border:1px solid #2b3a6e">🎮 <b>演示版</b> · 欢迎试玩并提意见 <button onclick="tour(0)">▶ 开始导览123</button> <button onclick="openFb()">💡 需求反馈</button><div class="mut">所有数据只保存在你自己的浏览器里。</div></div>
+<div class="card" style="margin:0 0 10px;border:1px solid var(--bd)">🎮 <b>演示版</b> · 欢迎试玩并提意见 <button onclick="tour(0)">▶ 开始导览</button> <button onclick="openFb()">💡 需求反馈</button><div class="mut">所有数据只保存在你自己的浏览器里。</div></div>
 <!-- 页面标题 -->
 <h1>🌌 时空漫游 <span class="mut">过去亿年 ↔ 未来万年 · 太阳系</span></h1>
 <!-- ① 事件信息区:标题、说明、图片/视频/课件(js/info.js) -->
 <div id="info" class="card"></div>
 <!-- ② 3D 天体:地球/月球/火星(js/globe.js) -->
 <div id="g3" class="card" style="padding:0;height:340px;position:relative;overflow:hidden;touch-action:none;cursor:grab"><div id="gl" style="position:absolute;left:10px;top:8px;font-size:13px;color:var(--mut);z-index:2;pointer-events:none"></div></div>
-<!-- ③ 太阳系 2D(js/solar.js) -->
+<!-- ③ 宇宙 2D:太阳系 / 银河系 / 本星系群 / 星云 四个尺度(js/solar.js、js/cosmos.js) -->
+<div class="row" id="lv" style="margin:6px 0"></div>
+<div id="lvmap" class="mut" style="line-height:1.9"></div>
 <canvas id="cv" width="720" height="400"></canvas>
+<div id="lvnote" class="mut" style="margin-top:4px"></div>
 <!-- ④ 时间显示 年月日 时分秒(js/clock.js) -->
 <div class="card" style="text-align:center"><div id="clk"></div><div id="clkt" class="mut"></div></div>
 <!-- ⑤ 时间轴:滑块、事件按钮、电影模式(js/timeline.js) -->
@@ -34,7 +38,7 @@
  <div id="track"></div>
  <div class="mut">时间轴为对数刻度:左侧至 2.5 亿年前,右侧至 1 万年后,中间为现在</div>
  <div class="row"><button id="prev">⏮ 上一个</button><button id="play">▶ 电影模式</button><button id="next">下一个 ⏭</button>
- <button id="now">回到现在</button><button id="cc">📚 课程中心</button><button id="rc">🏎 赛车游戏</button></div>
+ <button id="now">回到现在</button><button id="cc">📚 课程中心</button><button id="rc">🏎 赛车游戏</button><button id="sp">🚀 星际旅行</button></div>
  <div class="row" id="chips"></div>
 </div>
 <!-- ⑥ 添加计划与推演(js/plans.js) -->
@@ -53,10 +57,14 @@
 <script src="js/config.js"></script>
 <script src="js/map.js"></script>
 <script src="data/events.js"></script>
+<script src="data/bodies.js"></script>
+<script src="data/sky.js"></script>
 <script src="data/courses.js"></script>
+<script src="data/prog.js"></script>
 <script src="js/timeline.js"></script>
 <script src="js/plans.js"></script>
 <script src="js/solar.js"></script>
+<script src="js/cosmos.js"></script>
 <script src="js/globe.js"></script>
 <script src="js/clock.js"></script>
 <script src="data/lessons.js"></script>

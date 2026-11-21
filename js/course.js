@@ -9,17 +9,17 @@ const sv=()=>{try{localStorage.setItem('tscs',JSON.stringify(CS))}catch(e){alert
 const cm=document.createElement('div');cm.id='cm';document.body.append(cm);
 const el=(t,c,...k)=>{const e=document.createElement(t);if(c)e.className=c;k.flat().forEach(x=>e.append(x));return e};
 const bt=(t,f,c)=>{const b=el('button',c||'',t);b.onclick=f;return b};
-let cid=null,tb='out',rec=null,chunks=[],aurl='';
+let cs0=0,cid=null,tb='out',rec=null,chunks=[],aurl='';
 const best=id=>(CS.res[id]||[]).slice(-1)[0];
-function openCourse(id){cid=id||null;tb='out';cm.style.display='block';rc()}
+function openCourse(id){cid=id||null;tb='out';cs0=0;cm.style.display='block';rc()}
 function adv(c,r){const a=[],p=r.p,hs=CS.res[c.id];a.push(p>=85?['ok','✅ 掌握良好。进阶:'+c.next]:p>=60?['w','🟡 基本理解,请巩固下列错题,隔天重测。']:['bad','🔴 理解不足,建议重读内容再测。']);r.wrong.forEach(i=>a.push(['bad','• '+c.qs[i].q+' → '+c.qs[i].tip]));if(hs.length>1){const d=p-hs[hs.length-2].p;a.push(['mut',d>0?'📈 较上次 +'+d:d<0?'📉 较上次 '+d:'与上次持平'])}return a}
 function rc(){cm.innerHTML='';cm.scrollTop=0;const w=el('div','cw');cm.append(w);const c=COURSES.find(x=>x.id===cid);
  w.append(el('div','row',bt('✕ 返回时空漫游',()=>{cm.style.display='none'}),cid?bt('课程列表',()=>{cid=null;rc()}):'',el('b','',c?c.t:'📚 课程中心')));
- if(!c){COURSES.forEach(k=>{const b=best(k.id);w.append(el('div','card',el('b','',k.t),el('div','mut',k.sum),el('div','row',el('span','mut',b?'最近 '+b.p+'%':'未测验'),bt('进入课程 →',()=>{cid=k.id;tb='out';rc()}),bt('📍 在时空中定位',()=>{cm.style.display='none';stop();go(all().find(e=>e.course===k.id))}))))});return}
+ if(!c){let lg='';COURSES.forEach(k=>{if(k.grp&&k.grp!==lg){lg=k.grp;w.append(el('h3','',lg))}const b=best(k.id);w.append(el('div','card',el('b','',k.t),el('div','mut',k.sum),el('div','row',el('span','mut',b?'最近 '+b.p+'%':'未测验'),bt('进入课程 →',()=>{cid=k.id;tb='out';rc()}),bt('📍 在时空中定位',()=>{cm.style.display='none';stop();go(all().find(e=>e.course===k.id))}))))});return}
  const T=[['out','大纲'],['body','内容'],['test','测试'],['eval','评估建议'],['live','直播·回放·总结'],['fb','学员反馈']];
  w.append(el('div','row',T.map(t=>bt(t[1],()=>{tb=t[0];rc()},tb===t[0]?'on':''))));const p=el('div','card');w.append(p);({out:vo,body:vb,test:vt,eval:ve,live:vl,fb:vf}[tb])(c,p)}
-const vo=(c,p)=>p.append(el('h3','',c.sum),el('ol','',c.out.map(x=>el('li','',x))),el('div','mut','关键点 '+c.key.length+' 条 · 测验 '+c.qs.length+' 题'));
-const vb=(c,p)=>{c.body.forEach(x=>p.append(el('p','',x)));p.append(el('b','','关键点'),el('ul','',c.key.map(x=>el('li','',x))),bt('📝 去测试',()=>{tb='test';rc()},'on'))};
+const vo=(c,p)=>p.append(el('h3','',c.sum),el('ol','',c.out.map(x=>{if(typeof x==='string')return el('li','',x);const a=el('a','',x.t);a.href='#';a.onclick=e=>{e.preventDefault();cs0=x.s;tb='body';rc()};return el('li','',a,el('span','mut','  → 看课件第 '+(x.s+1)+' 页'))})),el('div','mut',c.slides?'点击大纲条目,直接跳到对应课件页':''),el('div','mut','关键点 '+c.key.length+' 条 · 测验 '+c.qs.length+' 题'));
+const vb=(c,p)=>{if(c.slides){p.append(mview({type:'slides',t:'课件(◀ ▶ 翻页,可全屏)',files:c.slides,k0:cs0,dl:c.pptx}));cs0=0}c.body.forEach(x=>p.append(el('p','',x)));p.append(el('b','','关键点'),el('ul','',c.key.map(x=>el('li','',x))),bt('📝 去测试',()=>{tb='test';rc()},'on'))};
 function vt(c,p){const ans={},out=el('div');c.qs.forEach((q,i)=>{const b=el('div','',el('p','',el('b','',(i+1)+'. '+q.q)));q.o.forEach((o,j)=>{const lb=el('label','o'),r=el('input');r.type='radio';r.name='q'+i;r.onchange=()=>ans[i]=j;lb.append(r,' '+o);b.append(lb)});p.append(b)});
  p.append(bt('提交答案',()=>{if(Object.keys(ans).length<c.qs.length){alert('还有题目未作答');return}const wrong=[];p.querySelectorAll('input').forEach(x=>x.disabled=true);
  c.qs.forEach((q,i)=>{if(ans[i]!==q.a)wrong.push(i);p.querySelectorAll('input[name=q'+i+']').forEach((x,j)=>{if(j===q.a)x.parentElement.classList.add('right');else if(j===ans[i])x.parentElement.classList.add('wrong')})});

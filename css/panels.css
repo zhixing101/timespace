@@ -1,12 +1,20 @@
 /* ===== panels.css — 事件信息区、时钟、推演结果 ===== */
-#sim div { padding:4px 0;border-bottom:1px dashed #2b3a6e }
+#sim div { padding:4px 0;border-bottom:1px dashed var(--bd) }
 .w { color:var(--warn) }
 #clk { font:600 22px/1.4 ui-monospace,Menlo,Consolas,monospace;color:var(--acc) }
 #info img,#info video { display:block }
 #info a { color:var(--acc) }
 
 /* ---- 地球双击弹窗(map.js)---- */
-.map-pop { position:absolute; left:8px; right:8px; bottom:8px; z-index:3; background:#111a33ee; border:1px solid var(--acc); border-radius:12px; padding:8px 10px; font-size:13px; }
+.map-pop { position:absolute; left:8px; right:8px; top:34px; z-index:3; background:var(--pop); border:1px solid var(--acc); border-radius:12px; padding:8px 10px; font-size:13px; }
 .map-pop .row { margin-top:6px; }
-.mapbtn { padding:6px 12px; border-radius:10px; border:1px solid #2b3a6e; background:#1b2750; color:#e8ecf8; cursor:pointer; font:inherit; }
-.mapbtn.on { background:var(--acc); color:#04101f; font-weight:700; border-color:var(--acc); }
+.mapbtn { padding:6px 12px; border-radius:10px; border:1px solid var(--bd); background:var(--btn); color:var(--fg); cursor:pointer; font:inherit; }
+.mapbtn.on { background:var(--acc); color:var(--onacc); font-weight:700; border-color:var(--acc); }
+#lv button.on { background:var(--acc);color:var(--onacc) }
+
+/* ---- 3D 左下角天体介绍(globe.js showIntro)---- */
+.gi { position:absolute; left:8px; bottom:8px; z-index:2; max-width:min(330px,70%); background:var(--pop); border:1px solid var(--bd); border-radius:10px; padding:6px 10px; font-size:12px; line-height:1.45; color:var(--fg); }
+.gi ul { margin:3px 0 4px; padding-left:16px; } .gi a { color:var(--acc); }
+#zoombar button { padding:4px 12px; }
+
+#lvmap .lvc { display:inline-block; padding:1px 8px; border:1px solid var(--bd); border-radius:12px; background:var(--btn); color:var(--fg); margin:1px 0 } #lvmap .lvc[data-k] { cursor:pointer } #lvmap .lvc.cur { background:var(--acc); color:var(--onacc); border-color:var(--acc) } #lvmap small { opacity:.85 }

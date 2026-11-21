@@ -1,0 +1,5 @@
+/* space.css — 星际旅行:在赛车样式基础上的补充 */
+#toast { max-width:min(640px,92vw); text-align:center; font-size:16px; line-height:1.5; }
+#hud { font-size:14px; }
+#end h1 { margin:0; }
+#game #hud, #game #env { z-index:2; }

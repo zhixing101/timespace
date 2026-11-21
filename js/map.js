@@ -55,8 +55,11 @@ function showMapPopup(lat, lon, body) {
     const tx = btn('腾讯地图', () => open(u.tencent), cn), gg = btn('谷歌地图', () => open(u.google), !cn);
     cn ? row.append(tx, gg) : row.append(gg, tx);
   } else {
-    t.textContent += ' · ' + (names[body] || '该天体') + '暂无地图跳转';
+    const d = (typeof BODY !== 'undefined') && BODY[body];
+    t.textContent += ' · ' + (d ? d.zh : '该天体') + '没有地图,看看 NASA 的介绍';
+    if (d) { const lk = d.nasa ? { t: 'NASA 介绍', u: d.nasa } : d.link; if (lk) row.append(btn('🛰 ' + lk.t + ' · ' + d.zh, () => open(lk.u), true)); }
   }
-  row.append(btn('🏎 在此天体赛车', () => { location.href = RACE_URL + '?planet=' + (body || 'earth'); }), btn('✕', () => pop.remove()));
+  if (body !== 'sun') row.append(btn('🏎 在此天体赛车', () => { location.href = RACE_URL + '?planet=' + (body || 'earth'); }));
+  row.append(btn('🚀 星际旅行', () => { location.href = SPACE_URL + '?from=' + (body || 'earth'); }), btn('✕', () => pop.remove()));
   pop.append(row);
 }

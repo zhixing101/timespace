@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+  时空漫游 · 星际旅行
+  data.js(航天器/任务地图)  js/engine.js(引擎:上帝视角 + 驾驶员视角)  js/ui.js(选择界面与按键)
+  复用:../race/data.js 的 DRIVERS(驾驶员)、../race/js/music.js(背景音乐)、../race/css/race.css(样式)、../js/theme.js(白天/夜晚)
+-->
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>星际旅行 · 时空漫游</title>
+<script src="../js/theme.js"></script>
+<link rel="stylesheet" href="../race/css/race.css"><link rel="stylesheet" href="css/space.css"></head><body>
+
+<div id="setup">
+  <p><a href="../index.html">← 返回时空漫游</a> · <a href="../race/index.html">🏎 去赛车</a></p>
+  <h1>🚀 星际旅行 <span data-theme-slot style="float:right"></span></h1>
+  <h2>1. 选择驾驶员</h2><div class="grid" id="drivers"></div>
+  <h2>2. 选择航天器</h2><div class="grid" id="crafts"></div>
+  <h2>3. 选择任务</h2><div class="grid" id="missions"></div>
+  <h2>4. 选择视角</h2><div class="grid" id="views"></div>
+  <h2>5. 背景音乐</h2><div class="grid" id="music"></div>
+  <div class="row">音量 <input type="range" id="vol" min="0" max="100" value="50"> <button id="mtest">▶ 试听</button></div>
+  <div class="row"><label><input type="checkbox" id="speak" checked> 🔊 到访天体时读出英文名</label></div>
+  <div class="row"><button class="go" id="start">🚀 出发</button><span style="color:#93a0c2">← → 转向 · ↑/W 推进 · ↓/S 刹车 · 空格/Shift + ↑ 加速(耗燃料)· V 切换视角。靠近行星、恒星、星云就算到访;小行星和行星会撞坏护盾。</span></div>
+</div>
+
+<div id="game" hidden>
+  <canvas id="cv"></canvas>
+  <div id="hud"></div><div id="env"></div><div id="count"></div><div id="toast"></div>
+  <div id="touch"><button data-k="left">◀</button><button data-k="right">▶</button><button data-k="brake">■</button><button data-k="boost">🔥</button><button data-k="gas">▲</button></div>
+  <div id="end" hidden><h1>任务完成!</h1><ol id="endlist"></ol><div id="endscore"></div><div id="endwords"></div>
+    <div class="row"><button class="go" id="again">再飞一次</button><button id="back2">换航天器 / 任务</button><a href="../index.html">返回时空漫游</a></div></div>
+  <button id="vbtn" style="position:absolute;right:150px;top:calc(10px + env(safe-area-inset-top,0px))">👁 视角</button>
+  <button id="mbtn" style="position:absolute;right:76px;top:calc(10px + env(safe-area-inset-top,0px))">🎵</button>
+  <button id="back" style="position:absolute;right:10px;top:calc(10px + env(safe-area-inset-top,0px))">退出</button>
+</div>
+
+<script src="../race/data.js"></script><script src="../race/js/music.js"></script><script src="data.js"></script><script src="js/engine.js"></script><script src="js/ui.js"></script>
+</body></html>

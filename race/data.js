@@ -12,6 +12,17 @@ const CARS = [
   { id: 'hover', name: '悬浮车',   color: '#38bdf8', power: 0.95, turn: 1.1,  grip: 0.55, maxv: 580, off: 0.3, hover: true,  windRes: 0,   desc: '靠空气垫漂移;空气稀薄处动力下降' }
 ];
 
+/**
+ * 驾驶员:mods 是对赛车属性的倍率(windRes 为加法),AI 车手会分到其余驾驶员。
+ * img 有图片时用图片(小鸟 = 玄凤鹦鹉照片),否则用 emoji。
+ */
+const DRIVERS = [
+  { id: 'bird',    name: '小鸟',  emoji: '🐦', img: 'img/bird.png', mods: { turn: 1.12, grip: 1.05 },   desc: '玄凤鹦鹉:灵活,转向更好' },
+  { id: 'lion',    name: '狮子',  emoji: '🦁', img: 'img/lion.png',           mods: { power: 1.08, maxv: 1.02 },  desc: '力量大,加速更猛' },
+  { id: 'cheetah', name: '猎豹',  emoji: '🐆', img: 'img/cheetah.png',           mods: { maxv: 1.08, grip: 0.95 },   desc: '最高速度更快,但抓地略差' },
+  { id: 'dino',    name: '恐龙',  emoji: '🦖', img: 'img/dino.png',           mods: { off: 0.7, windRes: 0.2 },   desc: '皮厚:冲出赛道和大风都不怕' }
+];
+
 const PLANETS = {
   mercury: { name: '水星', en: 'Mercury', g: 3.7,  temp: '白天约 430°C,夜晚约 -180°C', atm: '几乎没有大气', air: 0.0,  grip: 0.7,  pw: 1.0,  wind: 0,   solid: true,  fx: 'none',
              ground: '#6f6f73', craters: '#58585c', road: '#303036', fog: null,
@@ -28,6 +39,9 @@ const PLANETS = {
   mars:    { name: '火星', en: 'Mars',    g: 3.71, temp: '平均约 -63°C',                atm: '稀薄的二氧化碳大气', air: 0.08, grip: 0.7,  pw: 0.95, wind: 40,  solid: true,  fx: 'dust',
              ground: '#b4532e', craters: '#9a4626', road: '#5e2f1d', fog: 'rgba(210,120,70,0.20)',
              note: '沙尘暴时视线变差,阵风吹偏车子;空气稀薄,悬浮车动力下降。' },
+  pluto:   { name: '冥王星', en: 'Pluto', g: 0.62, temp: '平均约 -230°C', atm: '极稀薄的氮气大气', air: 0.01, grip: 0.65, pw: 0.9, wind: 0, solid: true, fx: 'none',
+             ground: '#bfa58f', craters: '#a58f7a', road: '#3a3340', fog: null,
+             note: '重力只有地球的约 6%,冰面抓地差,车容易漂。(新视野号 2015 年飞掠过这里)' },
   jupiter: { name: '木星', en: 'Jupiter', g: 24.79, temp: '云顶(1 个大气压处)约 -108°C', atm: '氢和氦,没有固体表面', air: 0.45, grip: 1.25, pw: 0.9, wind: 90,  solid: false, fx: 'lightning',
              bands: ['#d9a066', '#c58a50', '#e8c690', '#b87a45'], road: '#5a4636', fog: null,
              note: '没有固体表面,赛道是漂浮在云顶的平台;重力最大,抓地强,但风暴很猛。' },
@@ -41,7 +55,7 @@ const PLANETS = {
              bands: ['#4d6fe0', '#3f5fc8', '#6d8cf0', '#3652b5'], road: '#1d2a66', fog: null,
              note: '太阳系风速最快的行星之一,侧风会把车吹得到处跑。' }
 };
-const PLANET_ORDER = ['mercury', 'venus', 'earth', 'moon', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
+const PLANET_ORDER = ['mercury', 'venus', 'earth', 'moon', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
 
 /**
  * 赛道:ctrl = 中心线控制点(闭合曲线),road = 路半宽(越小越难),obst = 障碍数量,words = 单词牌数量,move = 是否有左右移动的障碍。

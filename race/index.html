@@ -7,20 +7,23 @@
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>星际赛车 · 时空漫游</title>
+<script src="js/theme.js"></script>
 <link rel="stylesheet" href="css/race.css"></head><body>
 
 <!-- ① 选择赛车和地点 -->
 <div id="setup">
   <p><a href="../index.html">← 返回时空漫游</a></p>
-  <h1>🏎 星际赛车</h1>
-  <h2>1. 选择赛车</h2><div class="grid" id="cars"></div>
-  <h2>2. 选择地点(太阳系行星)</h2><div class="grid" id="planets"></div>
+  <h1>🏎 星际赛车 <span data-theme-slot style="float:right"></span></h1>
+  <h2>1. 选择驾驶员</h2><div class="grid" id="drivers"></div>
+  <h2>2. 选择赛车</h2><div class="grid" id="cars"></div>
+  <h2>3. 选择地点(太阳系行星)</h2><div class="grid" id="planets"></div>
   <div id="info"></div>
-  <h2>3. 选择赛道</h2><div class="grid" id="tracks"></div>
-  <h2>4. 背景音乐</h2><div class="grid" id="music"></div>
+  <h2>4. 选择赛道</h2><div class="grid" id="tracks"></div>
+  <h2>5. 选择视角</h2><div class="grid" id="views"></div>
+  <h2>6. 背景音乐</h2><div class="grid" id="music"></div>
   <div class="row">音量 <input type="range" id="vol" min="0" max="100" value="50"> <button id="mtest">▶ 试听</button></div>
   <div class="row"><label><input type="checkbox" id="speak" checked> 🔊 捡到单词时读出英文</label></div>
-  <div class="row"><button class="go" id="start">🏁 开始比赛</button><span style="color:#93a0c2">方向键 / WASD 控制;手机用屏幕按钮。3 圈,和 3 辆电脑车比赛。撞单词牌得分(🎯目标词 +30,其他 +10),撞障碍 −5。</span></div>
+  <div class="row"><button class="go" id="start">🏁 开始比赛</button><span style="color:#93a0c2">方向键 / WASD 控制;V 键或 👁 切换视角;手机用屏幕按钮。3 圈,和 3 辆电脑车比赛。撞单词牌得分(🎯目标词 +30,其他 +10),撞障碍 −5。</span></div>
 </div>
 
 <!-- ② 比赛画面 -->
@@ -30,6 +33,7 @@
   <div id="touch"><button data-k="left">◀</button><button data-k="right">▶</button><button data-k="brake">■</button><button data-k="gas">▲</button></div>
   <div id="end" hidden><h1>比赛结束</h1><ol id="endlist"></ol><div id="endscore"></div><div id="endwords"></div>
     <div class="row"><button class="go" id="again">再来一局</button><button id="back2">换车 / 换地点</button><a href="../index.html">返回时空漫游</a></div></div>
+  <button id="vbtn" style="position:absolute;right:150px;top:calc(10px + env(safe-area-inset-top,0px))">👁 视角</button>
   <button id="mbtn" style="position:absolute;right:76px;top:calc(10px + env(safe-area-inset-top,0px))">🎵</button>
   <button id="back" style="position:absolute;right:10px;top:calc(10px + env(safe-area-inset-top,0px))">退出</button>
 </div>

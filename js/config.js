@@ -11,3 +11,5 @@ const NOW=new Date().getFullYear();
 const TENCENT_KEY = '';
 // 赛车页面地址(相对路径;发布成单文件时可替换为完整网址)
 const RACE_URL = 'race/index.html';
+// 星际旅行页面地址
+const SPACE_URL = 'space/index.html';

@@ -11,7 +11,7 @@ const u2y=u=>NOW+(u<0?-(Math.pow(10,-u*8.4)-1):Math.pow(10,u*4)-1);
 const sl=document.getElementById('sl'),$=id=>document.getElementById(id);
 function fy(y){const d=y-NOW;if(d<-1e8)return(-d/1e8).toFixed(1)+' 亿年前';if(d<-1e4)return Math.round(-d/1e4)+' 万年前';
  if(y<=0)return '公元前 '+Math.round(-y)+' 年';return '公元 '+Math.floor(y+1e-9)+' 年'}
-const PN={earth:'地球',moon:'月球',mars:'火星',venus:'金星',jupiter:'木星',mercury:'水星',saturn:'土星'};
+const PN={earth:'地球',moon:'月球',mars:'火星',venus:'金星',jupiter:'木星',mercury:'水星',saturn:'土星',uranus:'天王星',neptune:'海王星',pluto:'冥王星',sun:'太阳'};
 let cur=null;
 function show(){const u=sl.value/1000,y=u2y(u);let best=null,bd=9;
  all().forEach(e=>{const dd=Math.abs(y2u(e.y)-u);if(dd<bd){bd=dd;best=e}});

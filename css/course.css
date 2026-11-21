@@ -1,11 +1,11 @@
 /* ===== course.css — 课程中心与反馈面板(全屏覆盖层) ===== */
 #cm { display:none;position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px) }
 .cw { max-width:800px;margin:0 auto;padding:12px }
-.cw button.on { background:var(--acc);color:#04101f }
-.ok { color:#4ddc8f }
-.bad { color:#ff7a7a }
-.cw label.o { display:block;padding:6px 10px;border:1px solid #2b3a6e;border-radius:8px;margin-top:6px }
-.cw label.right { border-color:#4ddc8f }
-.cw label.wrong { border-color:#ff7a7a }
+.cw button.on { background:var(--acc);color:var(--onacc) }
+.ok { color:var(--ok) }
+.bad { color:var(--bad) }
+.cw label.o { display:block;padding:6px 10px;border:1px solid var(--bd);border-radius:8px;margin-top:6px }
+.cw label.right { border-color:var(--ok) }
+.cw label.wrong { border-color:var(--bad) }
 .cw textarea { width:100%;height:90px }
 .cw a { color:var(--acc) }

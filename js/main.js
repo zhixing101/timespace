@@ -7,3 +7,5 @@
 renderTicks();show();requestAnimationFrame(draw);
 // 赛车入口:带上当前事件所在的天体(地球/月球/火星),赛车页会预选该地点
 $('rc').onclick=()=>{const b=(cur&&['earth','moon','mars'].includes(cur.p))?cur.p:'earth';location.href=RACE_URL+'?planet='+b};
+
+$('sp').onclick=()=>{location.href=SPACE_URL};

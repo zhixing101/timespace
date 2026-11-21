@@ -4,7 +4,7 @@
  * 依赖(需先加载):data/events.js, clock.js
  * 提供(全局):SL(幻灯片路径生成)
  */
-const PFX={deck:'s',poem:'p',struct:'c',first:'f'};   // 文件夹→文件名前缀
+const PFX={deck:'s',poem:'p',struct:'c',first:'f',logic:'l'};   // 文件夹→文件名前缀
 const SL=(d,a,b)=>{const r=[];for(let i=a;i<=b;i++)r.push('media/'+d+'/'+PFX[d]+'-'+P2(i)+'.jpg');return r};
 const DK='media/deck.pptx';
 const ex=(t,dt,pr)=>{const e=E.find(x=>x.t===t);if(e)e.dt=dt};
@@ -22,4 +22,9 @@ E.push(
 {dt:'1908-11-14',p:'earth',l:'北京 · 中南海瀛台',la:39.91,lo:116.38,t:'📖 蒋老师的编程课 2-16 第一性原理 What · 1Q081114',d:'过去:什么是第一性原理(最基本、不能再拆的事实)、用科学理解(原子、0 和 1、三原色)、编程里的第一性原理。1908 年 11 月 14 日光绪帝去世,次日慈禧太后去世,12 月 2 日溥仪即位。',media:[{type:'img',t:'新闻示意图(手绘)',src:'media/news/first1908.jpg'},{type:'slides',t:'课件 · 过去:What',files:SL('first',2,6),dl:'media/first.pptx'}]},
 {dt:'2026-11-14',p:'earth',l:'线上课堂 · 酒泉(神舟发射地)',la:40.96,lo:100.28,t:'📖 蒋老师的编程课 2-16 第一性原理 Why · Z0261114',d:'现在:五个为什么、方法和工具、编程与英语学习的关联;分享电影《爱丽丝梦游仙境》疯狂茶会。一年前的今天神舟二十号航天员返回;当天未查到确定的中国重大事件。',media:[{type:'img',t:'新闻示意图(手绘)',src:'media/news/first2026.jpg'},{type:'img',t:'疯狂茶会(原创手绘示意)',src:'media/news/first_tea.jpg'},{type:'slides',t:'课件 · 现在:Why',files:SL('first',7,12),dl:'media/first.pptx'}]},
 {dt:'2028-11-11',p:'moon',l:'月球南极附近(想象的登月日)',la:-85,lo:31,t:'📖 蒋老师的编程课 2-16 第一性原理 How · Z0281111',d:'未来:用第一性原理看 HTML 怎么运行、用 GitHub 不断迭代、在网页上重现我们生活的世界。阿尔忒弥斯计划目标 2028 年载人登月(计划,日期可能变动,当天无确定登月日期)。',media:[{type:'img',t:'新闻示意图(手绘)',src:'media/news/first2028.jpg'},{type:'slides',t:'课件 · 未来:How',files:SL('first',13,17),dl:'media/first.pptx'}]});
+// ---- 第五周:2-19 / 2-20 / 2-21 逻辑 Where / Why / How(选举省议会 · APEC 会议 · 月球基地;图片为手绘示意)----
+E.push(
+{dt:'1909-11-20',p:'earth',l:'各省咨议局(清宣统元年)',la:32.06,lo:118.8,t:'📖 蒋老师的编程课 2-19 逻辑在哪里 Where · 1Q091120',d:'过去(选举省议会):逻辑三段论、语言中的 logic、代码中的 logic、常见逻辑错误。1909 年 10 月 14 日各省咨议局首次开会,是中国第一次由选举产生的省级议会。(11 月 20 日当天大事未查到,为这一年的背景。)',media:[{type:'slides',t:'课件 · 过去:Where',files:SL('logic',1,7),dl:'media/logic.pptx'}]},
+{dt:'2026-11-21',p:'earth',l:'线上课堂 · 深圳(APEC 会议)',la:22.54,lo:114.06,t:'📖 蒋老师的编程课 2-20 为什么要学逻辑 Why · Z0261121',d:'现在(APEC 会议):第一性原理指向逻辑、结构化需要逻辑、逻辑的工具及 GitHub;分享歌曲《更替的四季》(めぐる季節),讲解めぐる语源语义与四季成因。第 33 次 APEC 领导人非正式会议 11 月 18–19 日在深圳举行。',media:[{type:'slides',t:'课件 · 现在:Why',files:SL('logic',8,17),dl:'media/logic.pptx'}]},
+{dt:'2029-11-17',p:'moon',l:'月球南极附近(想象的月球基地)',la:-85,lo:31,t:'📖 蒋老师的编程课 2-21 逻辑应用 How · Z0291117',d:'未来(月球基地):时空漫游、赛车、语言学习中的逻辑;编程中的逻辑应用(if/else、for、GitHub 迭代)。嫦娥八号计划 2028 年前后发射,试验月壤建房;2029 年 11 月 17 日当天没有确定的月球基地事件,为想象的未来日期。',media:[{type:'slides',t:'课件 · 未来:How',files:SL('logic',18,25),dl:'media/logic.pptx'}]});
 E.forEach(e=>{if(e.dt)e.y=d2y(new Date(e.dt))});

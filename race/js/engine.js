@@ -25,11 +25,29 @@ const Race = (function () {
   }
 
   // ---------- 2. 车辆 ----------
-  function makeCar(def, idx, lane, isPlayer, skill) {
+  /** 车型 + 驾驶员倍率 → 实际属性(复制一份,不改原始数据) */
+  function withDriver(def, drv) {
+    const d = Object.assign({}, def), m = (drv && drv.mods) || {};
+    ['power', 'turn', 'grip', 'maxv', 'off'].forEach(k => { if (m[k]) d[k] *= m[k]; });
+    if (m.windRes) d.windRes = Math.min(0.95, d.windRes + m.windRes);
+    return d;
+  }
+  const avatars = {};                                              // 头像图片缓存(玄凤鹦鹉照片)
+  function avatar(drv) { if (drv.img && !avatars[drv.id]) { const i = new Image(); i.src = drv.img; avatars[drv.id] = i; } return avatars[drv.id]; }
+  /** 画驾驶员头像:白底圆 + 图片或 emoji;r 为半径,调用前要保证坐标系是“屏幕正向” */
+  function drawAvatar(drv, r) {
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill();
+    const im = avatar(drv);
+    if (im && im.complete && im.naturalWidth) { ctx.save(); ctx.beginPath(); ctx.arc(0, 0, r - 1, 0, 7); ctx.clip(); ctx.drawImage(im, -r, -r, 2 * r, 2 * r); ctx.restore(); }
+    else { ctx.font = Math.round(r * 1.5) + 'px system-ui,"Apple Color Emoji","Segoe UI Emoji",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#000'; ctx.fillText(drv.emoji, 0, 2); }
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.stroke();
+  }
+  function makeCar(def0, idx, lane, isPlayer, skill, drv) {
+    const def = withDriver(def0, drv);
     const T = run.track, N = T.length, p = T[idx], q = T[(idx + 1) % N];
     const a = Math.atan2(q[1] - p[1], q[0] - p[0]);
     return { def, isPlayer, skill, x: p[0] + Math.cos(a + Math.PI / 2) * lane, y: p[1] + Math.sin(a + Math.PI / 2) * lane,
-             a, vx: 0, vy: 0, idx, lap: -1, prog: 0, off: false, done: false, time: 0 };
+             a, vx: 0, vy: 0, idx, lap: -1, driver: drv, prog: 0, off: false, done: false, time: 0 };
   }
 
   /** 物理:发动机沿车头方向加力;横向速度按抓地衰减(抓地小=漂移);阻力来自大气;风是侧向力 */
@@ -139,12 +157,15 @@ const Race = (function () {
       }
       ctx.restore();
     }
+    // 单词牌:上帝视角正常大小;驾驶员视角放大 2.4 倍,并反向旋转保持文字正立
+    const big = run.view === 'driver', ws = big ? 2.4 : 1;
     ctx.font = '700 24px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     for (const w of run.words) {                                                // 单词牌:只显示英文,捡到后才显示意思
       if (w.got) continue; const tw = ctx.measureText(w.w.en).width + 28, isT = run.target === w;
+      ctx.save(); ctx.translate(w.x, w.y); ctx.rotate(run.cr); ctx.scale(ws, ws);
       ctx.fillStyle = isT ? '#fff3b0' : '#ffffff'; ctx.strokeStyle = isT ? '#f59e0b' : '#3b82f6'; ctx.lineWidth = isT ? 6 : 4;
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(w.x - tw / 2, w.y - 20, tw, 40, 14) : ctx.rect(w.x - tw / 2, w.y - 20, tw, 40); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#1e293b'; ctx.fillText(w.w.en, w.x, w.y + 1);
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-tw / 2, -20, tw, 40, 14) : ctx.rect(-tw / 2, -20, tw, 40); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#1e293b'; ctx.fillText(w.w.en, 0, 1); ctx.restore();
     }
   }
 
@@ -176,6 +197,7 @@ const Race = (function () {
     ctx.fillStyle = c.def.color; ctx.fillRect(-24, -13, 48, 26);
     ctx.fillStyle = '#0b1220'; ctx.fillRect(2, -9, 14, 18); ctx.fillStyle = '#fff'; ctx.fillRect(22, -10, 3, 5); ctx.fillRect(22, 5, 3, 5);
     if (c.isPlayer) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.strokeRect(-24, -13, 48, 26); }
+    if (c.driver) { ctx.rotate(-c.a - run.rot); ctx.translate(-2, 0); drawAvatar(c.driver, run.view === 'driver' ? 17 : 14); }   // 头像保持正立
     ctx.restore();
   }
   function drawFx(env, dt, playerSpeed) {                              // 屏幕空间粒子:沙尘/风线/闪电/雾
@@ -213,11 +235,24 @@ const Race = (function () {
     hud(me, order.indexOf(me) + 1, order.length);
     // 绘制
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-    const z = 0.78 - Math.min(0.2, (me.speed || 0) / 3500);
     if (run.shake > 0) run.shake -= dt;
-    ctx.save(); ctx.translate(W / 2 + (run.shake > 0 ? (Math.random() - 0.5) * run.shake * 30 : 0), H / 2 + (run.shake > 0 ? (Math.random() - 0.5) * run.shake * 30 : 0)); ctx.scale(z, z); ctx.translate(-me.x, -me.y);
-    drawGround(env, me.x, me.y, z); drawRoad(env); drawItems(env); run.cars.slice().reverse().forEach(drawCar);
+    const sh = run.shake > 0 ? () => (Math.random() - 0.5) * run.shake * 30 : () => 0;
+    let z;
+    ctx.save();
+    if (run.view === 'driver') {                                   // 驾驶员视角:车头朝上、拉近,车在屏幕下方
+      z = 1.3 - Math.min(0.3, (me.speed || 0) / 2200);
+      run.rot = -Math.PI / 2 - me.a; run.cr = -run.rot;
+      ctx.translate(W / 2 + sh(), H * 0.72 + sh()); ctx.rotate(run.rot); ctx.scale(z, z); ctx.translate(-me.x, -me.y);
+      drawGround(env, me.x, me.y, z * 0.42);
+    } else {                                                       // 上帝视角:正北朝上、拉远,看到整段赛道
+      z = 0.62 - Math.min(0.15, (me.speed || 0) / 4200);
+      run.rot = 0; run.cr = 0;
+      ctx.translate(W / 2 + sh(), H / 2 + sh()); ctx.scale(z, z); ctx.translate(-me.x, -me.y);
+      drawGround(env, me.x, me.y, z);
+    }
+    drawRoad(env); drawItems(env); run.cars.slice().reverse().forEach(drawCar);
     ctx.restore(); drawFx(env, dt, me.speed);
+    if (run.view === 'driver' && me.driver) { ctx.save(); ctx.translate(58, H - 140); drawAvatar(me.driver, 38); ctx.fillStyle = '#fff'; ctx.font = '700 14px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(me.driver.name, 0, 56); ctx.restore(); }
     if (run.playerDone && !run.ended) { run.ended = true; setTimeout(endRace, 900); }
     raf = requestAnimationFrame(frame);
   }
@@ -232,13 +267,15 @@ const Race = (function () {
     run.onFinish && run.onFinish(list.indexOf(run.cars[0]) + 1);
   }
 
-  function start(carId, planetKey, trackId, opts) {
+  function start(carId, planetKey, trackId, opts) {   // opts: { speak, driver(DRIVERS 的 id), view('god' | 'driver') }
     stop(); resize();
     const env = PLANETS[planetKey], trk = TRACKS[trackId] || TRACKS.easy, N = buildTrack(trk.ctrl).length;
-    run = { env, track: buildTrack(trk.ctrl), road: trk.road, trackId, opts: opts || {}, t: 0, time: 0, count: 3.5, last: performance.now(), flash: 0, finish: [], cars: [], craters: [], parts: [], score: 0, got: [], shake: 0, obst: [], words: [] };
+    run = { env, track: buildTrack(trk.ctrl), road: trk.road, trackId, opts: opts || {}, t: 0, time: 0, count: 3.5, last: performance.now(), flash: 0, finish: [], cars: [], craters: [], parts: [], score: 0, got: [], shake: 0, obst: [], words: [], view: (opts && opts.view) || 'god', rot: 0, cr: 0 };
     const me = CARS.find(c => c.id === carId), others = CARS.filter(c => c.id !== carId);
-    run.cars.push(makeCar(me, N - 2, -45, true, 1));
-    others.forEach((d, i) => run.cars.push(makeCar(d, N - 4 - i * 2, i % 2 ? 45 : -45, false, 0.8 + i * 0.05)));
+    const myDrv = DRIVERS.find(d => d.id === (opts && opts.driver)) || DRIVERS[0], otherDrv = DRIVERS.filter(d => d !== myDrv);
+    run.cars.push(makeCar(me, N - 2, -45, true, 1, myDrv));
+    others.forEach((d, i) => run.cars.push(makeCar(d, N - 4 - i * 2, i % 2 ? 45 : -45, false, 0.8 + i * 0.05, otherDrv[i % otherDrv.length])));
+    DRIVERS.forEach(avatar);
     let s = 7; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;           // 固定种子:每次环形山位置相同
     spawn(trk);
     for (let i = 0; i < 420; i++) run.craters.push({ x: (rnd() - 0.5) * 6200, y: (rnd() - 0.5) * 4600, r: 14 + rnd() * 70 });
@@ -248,5 +285,7 @@ const Race = (function () {
     raf = requestAnimationFrame(frame);
   }
   function stop() { cancelAnimationFrame(raf); run = null; }
-  return { start, stop, keys, LAPS, debug: () => run };   // debug 仅供测试使用
+  function setView(v) { if (run) run.view = v; }
+  function getView() { return run ? run.view : 'god'; }
+  return { start, stop, keys, LAPS, setView, getView, debug: () => run };   // debug 仅供测试使用
 })();

@@ -8,6 +8,28 @@
   let planet = new URLSearchParams(location.search).get('planet');
   if (!PLANETS[planet]) planet = 'earth';                 // 从“时空漫游”跳转时可带 ?planet=mars
 
+  // 驾驶员卡片(小鸟用照片头像,其余用 emoji)与视角
+  let driver = 'bird', view = 'god';
+  try { driver = localStorage.getItem('race-driver') || driver; view = localStorage.getItem('race-view') || view; } catch (e) {}
+  if (!DRIVERS.some(d => d.id === driver)) driver = 'bird';
+  if (view !== 'god' && view !== 'driver') view = 'god';
+  DRIVERS.forEach(d => {
+    const b = document.createElement('div'); b.className = 'opt'; b.dataset.id = d.id;
+    const face = d.img ? '<img class="face" src="' + d.img + '" alt="' + d.name + '">' : '<span class="face emo">' + d.emoji + '</span>';
+    b.innerHTML = face + '<b>' + d.name + '</b><small>' + d.desc + '</small>';
+    b.onclick = () => { driver = d.id; try { localStorage.setItem('race-driver', d.id); } catch (e) {} mark(); };
+    $('drivers').append(b);
+  });
+  const VIEWS = [['god', '🛰 上帝视角', '从高处看整条赛道,正北朝上,看得远'], ['driver', '👀 驾驶员视角', '车头朝前、画面拉近,单词牌变得很大,更容易读']];
+  VIEWS.forEach(v => {
+    const b = document.createElement('div'); b.className = 'opt'; b.dataset.id = v[0];
+    b.innerHTML = '<b>' + v[1] + '</b><small>' + v[2] + '</small>';
+    b.onclick = () => { setView(v[0]); };
+    $('views').append(b);
+  });
+  function setView(v) { view = v; try { localStorage.setItem('race-view', v); } catch (e) {} Race.setView(v); mark(); }
+  $('vbtn').onclick = () => setView(view === 'god' ? 'driver' : 'god');
+
   // 车型卡片
   CARS.forEach(c => {
     const b = document.createElement('div'); b.className = 'opt'; b.dataset.id = c.id;
@@ -35,6 +57,9 @@
     $('tracks').append(b);
   });
   function mark() {
+    document.querySelectorAll('#drivers .opt').forEach(e => e.classList.toggle('on', e.dataset.id === driver));
+    document.querySelectorAll('#views .opt').forEach(e => e.classList.toggle('on', e.dataset.id === view));
+    $('vbtn').textContent = view === 'driver' ? '👀 驾驶员' : '🛰 上帝';
     document.querySelectorAll('#tracks .opt').forEach(e => e.classList.toggle('on', e.dataset.id === track));
     document.querySelectorAll('#cars .opt').forEach(e => e.classList.toggle('on', e.dataset.id === car));
     document.querySelectorAll('#planets .opt').forEach(e => e.classList.toggle('on', e.dataset.id === planet));
@@ -64,14 +89,14 @@
   mark();
 
   // 开始 / 返回
-  function begin() { $('setup').hidden = true; $('game').hidden = false; delete $('mtest').dataset.on; $('mtest').textContent = '▶ 试听'; Music.play(music); Race.start(car, planet, track, { speak: $('speak').checked }); }
+  function begin() { $('setup').hidden = true; $('game').hidden = false; delete $('mtest').dataset.on; $('mtest').textContent = '▶ 试听'; Music.play(music); Race.start(car, planet, track, { speak: $('speak').checked, driver, view }); }
   $('start').onclick = begin;
   $('again').onclick = begin;
   $('back').onclick = $('back2').onclick = () => { Race.stop(); Music.stop(); $('game').hidden = true; $('setup').hidden = false; };
 
   // 键盘:方向键 / WASD
   const map = { ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right', ArrowUp: 'gas', w: 'gas', W: 'gas', ArrowDown: 'brake', s: 'brake', S: 'brake', ' ': 'brake' };
-  addEventListener('keydown', e => { if (map[e.key]) { Race.keys[map[e.key]] = true; e.preventDefault(); } });
+  addEventListener('keydown', e => { if ((e.key === 'v' || e.key === 'V') && !$('game').hidden) { setView(view === 'god' ? 'driver' : 'god'); return; } if (map[e.key]) { Race.keys[map[e.key]] = true; e.preventDefault(); } });
   addEventListener('keyup',   e => { if (map[e.key]) Race.keys[map[e.key]] = false; });
   // 触屏按钮
   document.querySelectorAll('#touch button').forEach(b => {

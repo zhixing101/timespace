@@ -1,5 +1,5 @@
 /* ===== base.css — 颜色变量、重置、通用组件(卡片/按钮/输入框) ===== */
-:root { color-scheme:dark;--bg:#070b18;--card:#111a33;--fg:#e8ecf8;--mut:#8b97b8;--acc:#5bc0ff;--warn:#ffb454;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px) }
+:root { color-scheme:dark;--bg:#070b18;--card:#111a33;--fg:#e8ecf8;--mut:#8b97b8;--acc:#5bc0ff;--warn:#ffb454;--btn:#1b2750;--btnh:#25357a;--bd:#2b3a6e;--pop:#111a33ee;--onacc:#04101f;--ok:#4ddc8f;--bad:#ff7a7a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px) }
 * { box-sizing:border-box }
 body { margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 system-ui,"PingFang SC","Microsoft YaHei",sans-serif }
 main { max-width:860px;margin:0 auto;padding:12px }
@@ -9,7 +9,12 @@ canvas { width:100%;border-radius:12px;background:#03050d;display:block }
 .big { font-size:22px;color:var(--acc);font-weight:600 }
 .mut { color:var(--mut);font-size:13px }
 input[type=range] { width:100% }
-button,select,input,textarea { background:#1b2750;color:var(--fg);border:1px solid #2b3a6e;border-radius:8px;padding:6px 10px;font:inherit }
+button,select,input,textarea { background:var(--btn);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;font:inherit }
 button { cursor:pointer }
-button:hover { background:#25357a }
+button:hover { background:var(--btnh) }
 .row { display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:6px }
+
+/* ---- 配色:夜晚(默认,深色)/ 白天(浅色);js/theme.js 按当前时间自动切换,也可手动切换 ---- */
+:root[data-theme=light] { color-scheme:light;--bg:#eef4ff;--card:#ffffff;--fg:#1b2440;--mut:#5b6785;--acc:#1f6fd6;--warn:#b45309;--btn:#e3ecfb;--btnh:#cfdcf5;--bd:#b9c7e6;--pop:#ffffffee;--onacc:#ffffff;--ok:#15803d;--bad:#c62828 }
+:root[data-theme=light] #g3 { background:linear-gradient(#9fd2ff,#e9f5ff) }
+#themebtn { position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:10px;z-index:45;padding:4px 10px;font-size:13px;border-radius:16px;opacity:.95 }
