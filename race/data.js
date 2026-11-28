@@ -6,10 +6,10 @@
  *   g 表面重力 m/s²;temp/atm 仅用于展示。数据为近似值。
  */
 const CARS = [
-  { id: 'spark', name: '闪电跑车', color: '#ef4444', power: 1.0,  turn: 1.0,  grip: 0.9, maxv: 620, off: 1.0, hover: false, windRes: 0,   desc: '速度最快,抓地一般' },
-  { id: 'rover', name: '越野车',   color: '#22c55e', power: 0.85, turn: 1.05, grip: 1.3, maxv: 520, off: 0.45, hover: false, windRes: 0.2, desc: '抓地强,冲出赛道损失小' },
-  { id: 'truck', name: '重型卡车', color: '#f59e0b', power: 0.75, turn: 0.8,  grip: 1.1, maxv: 480, off: 0.7, hover: false, windRes: 0.7, desc: '车身重,几乎不怕风' },
-  { id: 'hover', name: '悬浮车',   color: '#38bdf8', power: 0.95, turn: 1.1,  grip: 0.55, maxv: 580, off: 0.3, hover: true,  windRes: 0,   desc: '靠空气垫漂移;空气稀薄处动力下降' }
+  { id: 'spark', name: '闪电跑车', color: '#ef4444', power: 1.0,  turn: 1.0,  grip: 0.9, maxv: 620, mass: 1.0, off: 1.0, hover: false, windRes: 0,   desc: '速度最快,抓地一般' },
+  { id: 'rover', name: '越野车',   color: '#22c55e', power: 0.85, turn: 1.05, grip: 1.3, maxv: 520, mass: 1.15, off: 0.45, hover: false, windRes: 0.2, desc: '抓地强,冲出赛道损失小' },
+  { id: 'truck', name: '重型卡车', color: '#f59e0b', power: 0.75, turn: 0.8,  grip: 1.1, maxv: 480, mass: 1.8, off: 0.7, hover: false, windRes: 0.7, desc: '车身重,几乎不怕风' },
+  { id: 'hover', name: '悬浮车',   color: '#38bdf8', power: 0.95, turn: 1.1,  grip: 0.55, maxv: 580, mass: 0.9, off: 0.3, hover: true,  windRes: 0,   desc: '靠空气垫漂移;空气稀薄处动力下降' }
 ];
 
 /**

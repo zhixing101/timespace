@@ -56,7 +56,24 @@
     b.onclick = () => { track = k; try { localStorage.setItem('race-track', k); } catch (e) {} mark(); };
     $('tracks').append(b);
   });
+  // 玩家人数与每位玩家的驾驶员/赛车
+  const PN = ['#ff5d5d', '#4ade80', '#60a5fa', '#fbbf24'], KEYTXT = ['WASD', '方向键', 'I J K L', 'T F G H'];
+  let nPl = 1; try { nPl = +(localStorage.getItem('race-npl') || 1); } catch (e) {} if (!(nPl >= 1 && nPl <= 4)) nPl = 1;
+  const pl = [0, 1, 2, 3].map(i => ({ driver: DRIVERS[i % DRIVERS.length].id, car: CARS[i % CARS.length].id }));
+  [1, 2, 3, 4].forEach(n => { const b = document.createElement('div'); b.className = 'opt'; b.dataset.id = n; b.innerHTML = '<b>' + ['🧑', '👫', '👨‍👩‍👦', '👨‍👩‍👧‍👦'][n - 1] + ' ' + n + ' 人</b><small>' + (n === 1 ? '单人,可用 WASD 或方向键' : '分屏对战 · 同一键盘/手柄') + '</small>'; b.onclick = () => { nPl = n; try { localStorage.setItem('race-npl', n); } catch (e) {} mark(); }; $('npl').append(b); });
+  function buildPls() {
+    const box = $('pls'); box.innerHTML = '';
+    $('h1p').hidden = $('h2p').hidden = $('drivers').hidden = $('cars').hidden = nPl > 1;
+    if (nPl === 1) return;
+    for (let i = 0; i < nPl; i++) {
+      const d = document.createElement('div'); d.className = 'pl';
+      d.innerHTML = '<b style="color:' + PN[i] + '">P' + (i + 1) + '</b> <small>' + KEYTXT[i] + '</small> 驾驶员 <select data-k="driver">' + DRIVERS.map(x => '<option value="' + x.id + '"' + (x.id === pl[i].driver ? ' selected' : '') + '>' + x.name + '</option>').join('') + '</select> 赛车 <select data-k="car">' + CARS.map(x => '<option value="' + x.id + '"' + (x.id === pl[i].car ? ' selected' : '') + '>' + x.name + '</option>').join('') + '</select>';
+      d.querySelectorAll('select').forEach(s => s.onchange = () => { pl[i][s.dataset.k] = s.value; });
+      box.append(d);
+    }
+  }
   function mark() {
+    document.querySelectorAll('#npl .opt').forEach(e => e.classList.toggle('on', +e.dataset.id === nPl)); buildPls();
     document.querySelectorAll('#drivers .opt').forEach(e => e.classList.toggle('on', e.dataset.id === driver));
     document.querySelectorAll('#views .opt').forEach(e => e.classList.toggle('on', e.dataset.id === view));
     $('vbtn').textContent = view === 'driver' ? '👀 驾驶员' : '🛰 上帝';
@@ -89,15 +106,21 @@
   mark();
 
   // 开始 / 返回
-  function begin() { $('setup').hidden = true; $('game').hidden = false; delete $('mtest').dataset.on; $('mtest').textContent = '▶ 试听'; Music.play(music); Race.start(car, planet, track, { speak: $('speak').checked, driver, view }); }
+  function begin() { $('setup').hidden = true; $('game').hidden = false; delete $('mtest').dataset.on; $('mtest').textContent = '▶ 试听'; Music.play(music); Race.start(car, planet, track, { speak: $('speak').checked, driver, view, ai: $('aifill').checked, players: nPl === 1 ? [{ driver, car }] : pl.slice(0, nPl).map(p => ({ driver: p.driver, car: p.car })) }); }
   $('start').onclick = begin;
   $('again').onclick = begin;
   $('back').onclick = $('back2').onclick = () => { Race.stop(); Music.stop(); $('game').hidden = true; $('setup').hidden = false; };
 
-  // 键盘:方向键 / WASD
-  const map = { ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right', ArrowUp: 'gas', w: 'gas', W: 'gas', ArrowDown: 'brake', s: 'brake', S: 'brake', ' ': 'brake' };
-  addEventListener('keydown', e => { if ((e.key === 'v' || e.key === 'V') && !$('game').hidden) { setView(view === 'god' ? 'driver' : 'god'); return; } if (map[e.key]) { Race.keys[map[e.key]] = true; e.preventDefault(); } });
-  addEventListener('keyup',   e => { if (map[e.key]) Race.keys[map[e.key]] = false; });
+  // 键盘:单人 = WASD + 方向键 + 空格;多人 P1 WASD / P2 方向键 / P3 IJKL / P4 TFGH
+  const KM = [['a', 'd', 'w', 's'], ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'], ['j', 'l', 'i', 'k'], ['f', 'h', 't', 'g']], ACT = ['left', 'right', 'gas', 'brake'];
+  function setKey(e, v) {
+    const k = e.key.length === 1 ? e.key.toLowerCase() : e.key; let hit = false;
+    for (let p = 0; p < 4; p++) { const i = KM[p].indexOf(k); if (i < 0) continue; hit = true; if (nPl === 1 && p > 1) continue; if (nPl > 1 && p >= nPl) continue; Race.pk[nPl === 1 ? 0 : p][ACT[i]] = v; }
+    if (nPl === 1 && k === ' ') { Race.pk[0].brake = v; hit = true; }
+    return hit;
+  }
+  addEventListener('keydown', e => { if ((e.key === 'v' || e.key === 'V') && !$('game').hidden) { setView(view === 'god' ? 'driver' : 'god'); return; } if (setKey(e, true) && !$('game').hidden) e.preventDefault(); });
+  addEventListener('keyup', e => { setKey(e, false); });
   // 触屏按钮
   document.querySelectorAll('#touch button').forEach(b => {
     const k = b.dataset.k;

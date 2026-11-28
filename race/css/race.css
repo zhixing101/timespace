@@ -50,3 +50,10 @@ label { cursor:pointer; }
 #game { color:#e8ecf8; }
 #game button.go { background:#5bc0ff; color:#04101f; border-color:#5bc0ff; }
 #game a { color:#5bc0ff; }
+
+/* 多人分屏:每位玩家自己的 HUD 与提示 */
+#vpui { position:absolute; inset:0; pointer-events:none; }
+.phud { position:absolute; display:flex; gap:10px; flex-wrap:wrap; padding:6px 10px; padding-top:calc(6px + env(safe-area-inset-top,0px)); background:linear-gradient(#000a,#0000); font-weight:600; text-shadow:0 1px 3px #000; }
+.ptoast { position:absolute; transform:translateX(-50%); background:#000b; padding:6px 14px; border-radius:12px; font-size:18px; opacity:0; transition:opacity .2s; max-width:46%; text-align:center; }
+#pls .pl { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:6px 0; padding:8px; border:2px solid var(--line); border-radius:12px; background:var(--card); }
+#pls select { font:inherit; background:var(--btn); color:var(--fg); border:1px solid var(--line); border-radius:8px; padding:4px 8px; }
